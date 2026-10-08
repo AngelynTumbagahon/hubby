@@ -36,8 +36,8 @@
             min-height: 430px;
         }
         .gif-display {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             object-fit: contain;
             margin-bottom: 15px;
             border-radius: 12px;
@@ -52,8 +52,11 @@
             color: #dc3545;
             font-size: 16px;
             font-weight: bold;
-            min-height: 24px;
-            margin-bottom: 25px;
+            min-height: 48px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .buttons {
             display: flex;
@@ -74,6 +77,10 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.98);
         }
         #yesBtn {
             background-color: #e91e63;
@@ -179,8 +186,8 @@
 
     <!-- STAGE 1: The Question Box -->
     <div class="container" id="quizContainer">
-        <!-- Replaced emoji with dynamic GIF image tag -->
-        <img src="https://giphy.com" class="gif-display" id="mainGif" alt="Cute status GIF">
+        <!-- FIXED STABLE LINK: Pleading/waiting cutely -->
+        <img src="https://moeyy.xyz" class="gif-display" id="mainGif" alt="Cute bear waiting">
         <h1>Do you still want to be my boyfriend?</h1>
         <div class="warning-text" id="warningMessage"></div>
         <div class="buttons">
@@ -189,7 +196,7 @@
         </div>
     </div>
 
-    <!-- STAGE 2: Envelope Pop Up (Hidden initially) -->
+    <!-- STAGE 2: Envelope Pop Up -->
     <div class="container hidden" id="envelopeStage">
         <div class="envelope-container">
             <div class="arrow-down">⬇️</div>
@@ -198,11 +205,11 @@
         </div>
     </div>
 
-    <!-- STAGE 3: Kiss Request Box (Hidden initially) -->
+    <!-- STAGE 3: Kiss Request Box -->
     <div class="container hidden" id="kissStage">
         <div class="kiss-container">
-            <!-- Replaced static emojis with an animated kiss GIF -->
-            <img src="https://giphy.com" class="gif-display" id="kissGif" alt="Kiss GIF">
+            <!-- FIXED STABLE LINK: Kiss requesting face -->
+            <img src="https://moeyy.xyz" class="gif-display" id="kissGif" alt="Kissing animation">
             <div class="instruction-tag" style="padding: 0 10px;">"click mo na kiss button bilisan mo para kiss na tayo"</div>
             <button id="kissBtn">MUAH! 💋</button>
         </div>
@@ -211,8 +218,8 @@
     <!-- Message Letter Modal Display Window -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
-            <!-- Replaced icon with celebratory modal GIF -->
-            <img src="https://giphy.com" style="width:100px; height:100px; margin-bottom:10px;" alt="Hearts GIF">
+            <!-- FIXED STABLE LINK: Hearts bursting popup -->
+            <img src="https://moeyy.xyz" style="width:100px; height:100px; margin-bottom:10px;" alt="Hearts exploding">
             <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka? 😂❤️</h3>
             <p style="color: #555; line-height: 1.6; font-size: 18px; margin: 0; text-align: center;">
                 Happy Monthsary! <br> I love you so much! 💌✨
