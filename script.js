@@ -29,14 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
         "Hinding-hindi mo yan mapipindot! 🤪"
     ];
 
-    // URLs of matching angry/crying cartoon reaction GIFs
+    // FIXED STABLE LINKS: Proxy bypass links for smooth cross-origin asset loading
     const gifArray = [
-        "https://giphy.com", // Angry cute punch
-        "https://giphy.com", // Angrily pointing
-        "https://giphy.com", // Crying mad tantrum
-        "https://giphy.com", // Stomping feet angry
-        "https://giphy.com", // Aggressive eyes
-        "https://giphy.com"  // Laser madness eyes
+        "https://moeyy.xyz", // Angry cute hit
+        "https://moeyy.xyz", // Angry pointing
+        "https://moeyy.xyz", // Angrily crying tantrum
+        "https://moeyy.xyz", // Sulking angry
+        "https://moeyy.xyz", // Aggressive look
+        "https://moeyy.xyz"  // Tantrum kicking
     ];
     let warningIndex = 0;
 
@@ -44,27 +44,22 @@ document.addEventListener("DOMContentLoaded", () => {
     function moveNoButton() {
         const padding = 20;
         
-        // Calculate max boundaries keeping it within safe screen bounds
         const maxX = window.innerWidth - noBtn.offsetWidth - padding;
         const maxY = window.innerHeight - noBtn.offsetHeight - padding;
         
-        // Generate pseudo-random clean absolute locations
         const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
         const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
         
-        // Override container constraints to jump around the viewport
         noBtn.style.position = "fixed";
         noBtn.style.left = `${randomX}px`;
         noBtn.style.top = `${randomY}px`;
 
-        // Cycle through dynamic playful warnings and change the image to matching dynamic GIFs
         warningMessage.textContent = warnings[warningIndex];
         mainGif.src = gifArray[warningIndex];
         
         warningIndex = (warningIndex + 1) % warnings.length;
     }
 
-    // Trigger movement on both hover and touch to make it unclickable
     noBtn.addEventListener("mouseover", moveNoButton);
     noBtn.addEventListener("touchstart", (e) => {
         e.preventDefault();
@@ -75,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     yesBtn.addEventListener("click", () => {
         quizContainer.classList.add("hidden");
         if (noBtn.style.position === "fixed") {
-            noBtn.style.display = "none"; // Clean up floating button
+            noBtn.style.display = "none";
         }
         envelopeStage.classList.remove("hidden");
     });
@@ -92,22 +87,19 @@ document.addEventListener("DOMContentLoaded", () => {
         kissStage.classList.remove("hidden");
     });
 
-    // --- STAGE 3: Synthesized Kiss Audio Generator ("Muah!") ---
+    // --- STAGE 3: Synthesized Kiss Audio Generator ---
     function playKissSound() {
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             const ctx = new AudioContext();
             
-            // Generate a quick pop burst simulating smacking lips
             const osc = ctx.createOscillator();
             const gainNode = ctx.createGain();
             
             osc.type = "sine";
-            // Sliding frequencies downward to simulate a wet dynamic sound pattern
             osc.frequency.setValueAtTime(800, ctx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.15);
             
-            // Sharp amplitude decay envelope curve
             gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
             
@@ -117,19 +109,18 @@ document.addEventListener("DOMContentLoaded", () => {
             osc.start();
             osc.stop(ctx.currentTime + 0.15);
         } catch (e) {
-            console.log("Audio play suppressed or unsupported by context constraints", e);
+            console.log("Audio constraints block", e);
         }
     }
 
-    // Play synthesized kiss audio and trigger local visual alert confirmation
     kissBtn.addEventListener("click", () => {
         playKissSound();
         
-        // Update the kiss stage GIF to an ultra happy celebration version once clicked!
-        kissGif.src = "https://giphy.com";
+        // FIXED STABLE LINK: Dynamic happy jump kiss animation loop upon completion
+        kissGif.src = "https://moeyy.xyz";
         
         setTimeout(() => {
             alert("Muah! 💋 I love you so much baby! Happy Monthsary ulit! ❤️✨");
-        }, 100);
+        }, 150);
     });
 });
