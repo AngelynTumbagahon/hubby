@@ -35,27 +35,12 @@
             justify-content: center;
             min-height: 430px;
         }
-        .gif-placeholder {
-            width: 160px;
-            height: 160px;
+        .gif-display {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             border-radius: 12px;
-            background-color: #fff0f3;
-            border: 2px dashed #ffb3c1;
-        }
-        /* Reliable Pure CSS Animated Asset Frameworks to replace failing endpoints */
-        .heart-pixel {
-            font-size: 75px;
-            animation: beat 0.8s infinite alternate ease-in-out;
-            line-height: 1;
-        }
-        .angry-bounce {
-            font-size: 75px;
-            animation: shake 0.3s infinite alternate ease-in-out;
-            line-height: 1;
         }
         h1 {
             color: #d63384;
@@ -67,11 +52,8 @@
             color: #dc3545;
             font-size: 16px;
             font-weight: bold;
-            min-height: 48px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 24px;
+            margin-bottom: 25px;
         }
         .buttons {
             display: flex;
@@ -92,10 +74,6 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.1s;
-        }
-        button:active {
-            transform: scale(0.98);
         }
         #yesBtn {
             background-color: #e91e63;
@@ -187,8 +165,6 @@
             width: auto;
         }
         .hidden { display: none !important; }
-        
-        /* Keyframe Engines */
         @keyframes bounceArrow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -197,24 +173,15 @@
             0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes beat {
-            to { transform: scale(1.15); }
-        }
-        @keyframes shake {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            100% { transform: translate(-2px, -1px) rotate(-3deg); }
-        }
     </style>
 </head>
 <body>
 
     <!-- STAGE 1: The Question Box -->
     <div class="container" id="quizContainer">
-        <div class="gif-placeholder" id="mainImgFrame">
-            <!-- Uses embedded layout structures to ensure zero load failure -->
-            <div class="heart-pixel" id="mainVisual">🥺</div>
-        </div>
-        <h1>Do you still want to be my boyfriend?</h1>
+        <!-- Replaced emoji with dynamic GIF image tag -->
+        <img src="https://giphy.com" class="gif-display" id="mainGif" alt="Cute status GIF">
+        <h1>Will you still be willing to be my boyfriend?</h1>
         <div class="warning-text" id="warningMessage"></div>
         <div class="buttons">
             <button id="yesBtn">YES</button>
@@ -222,7 +189,7 @@
         </div>
     </div>
 
-    <!-- STAGE 2: Envelope Pop Up -->
+    <!-- STAGE 2: Envelope Pop Up (Hidden initially) -->
     <div class="container hidden" id="envelopeStage">
         <div class="envelope-container">
             <div class="arrow-down">⬇️</div>
@@ -231,12 +198,11 @@
         </div>
     </div>
 
-    <!-- STAGE 3: Kiss Request Box -->
+    <!-- STAGE 3: Kiss Request Box (Hidden initially) -->
     <div class="container hidden" id="kissStage">
         <div class="kiss-container">
-            <div class="gif-placeholder">
-                <div class="heart-pixel" id="kissVisual">😘</div>
-            </div>
+            <!-- Replaced static emojis with an animated kiss GIF -->
+            <img src="https://giphy.com" class="gif-display" id="kissGif" alt="Kiss GIF">
             <div class="instruction-tag" style="padding: 0 10px;">"click mo na kiss button bilisan mo para kiss na tayo"</div>
             <button id="kissBtn">MUAH! 💋</button>
         </div>
@@ -245,7 +211,8 @@
     <!-- Message Letter Modal Display Window -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
-            <div class="heart-pixel" style="margin-bottom: 10px; animation-duration: 0.5s;">💖</div>
+            <!-- Replaced icon with celebratory modal GIF -->
+            <img src="https://giphy.com" style="width:100px; height:100px; margin-bottom:10px;" alt="Hearts GIF">
             <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka? 😂❤️</h3>
             <p style="color: #555; line-height: 1.6; font-size: 18px; margin: 0; text-align: center;">
                 Happy Monthsary! <br> I love you so much! 💌✨
@@ -254,37 +221,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const quizContainer = document.getElementById("quizContainer");
-            const yesBtn = document.getElementById("yesBtn");
-            const noBtn = document.getElementById("noBtn");
-            const mainVisual = document.getElementById("mainVisual");
-            const warningMessage = document.getElementById("warningMessage");
-
-            const envelopeStage = document.getElementById("envelopeStage");
-            const envelopeBtn = document.getElementById("envelopeBtn");
-
-            const letterModal = document.getElementById("letterModal");
-            const closeModal = document.getElementById("closeModal");
-
-            const kissStage = document.getElementById("kissStage");
-            const kissBtn = document.getElementById("kissBtn");
-            const kissVisual = document.getElementById("kissVisual");
-
-            const warnings = [
-                "Subukan mo lang i-click yan! 😡",
-                "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
-                "Sige, subukan mo, gigil mo talaga ko! 🤬",
-                "Walang choice kundi YES! 😤",
-                "Ah ganyan ha? I-YES mo na kasi! 💔",
-                "Hinding-hindi mo yan mapipindot! 🤪"
-            ];
-
-            // Direct internal state targets to bypass browser image crashes completely
-            const assetVisualState = ["😠", "😾", "😭", "😤", "🤬", "👊"];
-            let warningIndex = 0;
-
-            function moveNoButton() {
-                const padding = 20;
-                const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    <script src="script.js"></script>
+</body>
+</html>
