@@ -1,106 +1,135 @@
-const noBtn = document.getElementById('noBtn');
-const yesBtn = document.getElementById('yesBtn');
-const quizContainer = document.getElementById('quizContainer');
-const mainEmoji = document.getElementById('mainEmoji');
-const warningMessage = document.getElementById('warningMessage');
+document.addEventListener("DOMContentLoaded", () => {
+    // Stage 1 elements
+    const quizContainer = document.getElementById("quizContainer");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const mainGif = document.getElementById("mainGif");
+    const warningMessage = document.getElementById("warningMessage");
 
-const envelopeStage = document.getElementById('envelopeStage');
-const envelopeBtn = document.getElementById('envelopeBtn');
-const letterModal = document.getElementById('letterModal');
-const closeModal = document.getElementById('closeModal');
+    // Stage 2 elements
+    const envelopeStage = document.getElementById("envelopeStage");
+    const envelopeBtn = document.getElementById("envelopeBtn");
 
-const kissStage = document.getElementById('kissStage');
-const kissBtn = document.getElementById('kissBtn');
+    // Modal elements
+    const letterModal = document.getElementById("letterModal");
+    const closeModal = document.getElementById("closeModal");
 
-// Web Audio API tool to generate a realistic crisp synthetic kissing noise completely offline without lag
-function playKissSound() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Create an instance of noise burst for the lip smack impact sound 
-    const bufferSize = audioCtx.sampleRate * 0.12; 
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
+    // Stage 3 elements
+    const kissStage = document.getElementById("kissStage");
+    const kissBtn = document.getElementById("kissBtn");
+    const kissGif = document.getElementById("kissGif");
+
+    // Array of threats/warnings for the escaping NO button
+    const warnings = [
+        "Subukan mo lang i-click yan! 😡",
+        "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
+        "Sige, subukan mo, gigil mo talaga ko! 🤬",
+        "Walang choice kundi YES! 😤",
+        "Ah ganyan ha? I-YES mo na kasi! 💔",
+        "Hinding-hindi mo yan mapipindot! 🤪"
+    ];
+
+    // URLs of matching angry/crying cartoon reaction GIFs
+    const gifArray = [
+        "https://giphy.com", // Angry cute punch
+        "https://giphy.com", // Angrily pointing
+        "https://giphy.com", // Crying mad tantrum
+        "https://giphy.com", // Stomping feet angry
+        "https://giphy.com", // Aggressive eyes
+        "https://giphy.com"  // Laser madness eyes
+    ];
+    let warningIndex = 0;
+
+    // --- STAGE 1: Runaway NO button logic ---
+    function moveNoButton() {
+        const padding = 20;
+        
+        // Calculate max boundaries keeping it within safe screen bounds
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+        
+        // Generate pseudo-random clean absolute locations
+        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+        
+        // Override container constraints to jump around the viewport
+        noBtn.style.position = "fixed";
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+
+        // Cycle through dynamic playful warnings and change the image to matching dynamic GIFs
+        warningMessage.textContent = warnings[warningIndex];
+        mainGif.src = gifArray[warningIndex];
+        
+        warningIndex = (warningIndex + 1) % warnings.length;
     }
 
-    const noiseNode = audioCtx.createBufferSource();
-    noiseNode.buffer = buffer;
+    // Trigger movement on both hover and touch to make it unclickable
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        moveNoButton();
+    });
 
-    // Filter sound settings to make it sound soft like a wet kiss smack element
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+    // --- TRANSITION: Click YES -> Reveal Envelope ---
+    yesBtn.addEventListener("click", () => {
+        quizContainer.classList.add("hidden");
+        if (noBtn.style.position === "fixed") {
+            noBtn.style.display = "none"; // Clean up floating button
+        }
+        envelopeStage.classList.remove("hidden");
+    });
 
-    const gainNode = audioCtx.createGain();
-    gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+    // --- STAGE 2: Envelope Open -> Reveal Modal Message ---
+    envelopeBtn.addEventListener("click", () => {
+        letterModal.style.display = "flex";
+    });
 
-    noiseNode.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    
-    noiseNode.start();
-}
+    // --- TRANSITION: Close Modal Message -> Reveal Kiss Box ---
+    closeModal.addEventListener("click", () => {
+        letterModal.style.display = "none";
+        envelopeStage.classList.add("hidden");
+        kissStage.classList.remove("hidden");
+    });
 
-const threats = [
-    { text: "Ayusin mo sagot mo! 😤", emoji: "😡" },
-    { text: "Subukan mo lang i-click 'to... 🫵", emoji: "🤬" },
-    { text: "Sa tingin mo talaga may choice ka? 🤨", emoji: "🙄" },
-    { text: "Isa... Palo ulo Gusto? 🥊", emoji: "💥" },
-    { text: "Ayusin mo Estioco! 🔒", emoji: "😈" }
-];
-let threatIndex = 0;
+    // --- STAGE 3: Synthesized Kiss Audio Generator ("Muah!") ---
+    function playKissSound() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+            
+            // Generate a quick pop burst simulating smacking lips
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            
+            osc.type = "sine";
+            // Sliding frequencies downward to simulate a wet dynamic sound pattern
+            osc.frequency.setValueAtTime(800, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.15);
+            
+            // Sharp amplitude decay envelope curve
+            gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+            
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            osc.start();
+            osc.stop(ctx.currentTime + 0.15);
+        } catch (e) {
+            console.log("Audio play suppressed or unsupported by context constraints", e);
+        }
+    }
 
-function moveNoButton() {
-    const padding = 24;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-    
-    const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-    const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-    
-    noBtn.style.position = 'fixed';
-    noBtn.style.left = randomX + 'px';
-    noBtn.style.top = randomY + 'px';
-
-    warningMessage.innerText = threats[threatIndex].text;
-    mainEmoji.innerText = threats[threatIndex].emoji;
-    threatIndex = (threatIndex + 1) % threats.length;
-}
-
-noBtn.addEventListener('mouseenter', moveNoButton);
-noBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    moveNoButton();
-});
-
-// YES Action: Hide quiz card container, pop open stage 2 envelope display banner
-yesBtn.addEventListener('click', () => {
-    quizContainer.classList.add('hidden');
-    envelopeStage.classList.remove('hidden');
-});
-
-// Click envelope: display secret text box message
-envelopeBtn.addEventListener('click', () => {
-    letterModal.style.display = 'flex';
-});
-
-// Close Message Letter: move automatically forward directly onto the Kiss Game section
-closeModal.addEventListener('click', () => {
-    letterModal.style.display = 'none';
-    envelopeStage.classList.add('hidden');
-    kissStage.classList.remove('hidden');
-});
-
-// Kiss Action: trigger kissing audio playback sound loop burst sequence
-kissBtn.addEventListener('click', () => {
-    playKissSound();
-    
-    // Add micro haptic button click animations feedback on success click burst loop
-    kissBtn.style.transform = 'scale(1.15)';
-    setTimeout(() => {
-        kissBtn.style.transform = 'scale(1)';
-    }, 100);
+    // Play synthesized kiss audio and trigger local visual alert confirmation
+    kissBtn.addEventListener("click", () => {
+        playKissSound();
+        
+        // Update the kiss stage GIF to an ultra happy celebration version once clicked!
+        kissGif.src = "https://giphy.com";
+        
+        setTimeout(() => {
+            alert("Muah! 💋 I love you so much baby! Happy Monthsary ulit! ❤️✨");
+        }, 100);
+    });
 });
