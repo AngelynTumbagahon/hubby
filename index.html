@@ -34,12 +34,10 @@
             align-items: center;
             justify-content: center;
             min-height: 400px;
-            transition: all 0.3s ease;
         }
         .emoji-display {
             font-size: 70px;
             margin-bottom: 15px;
-            transition: transform 0.2s ease;
         }
         h1 {
             color: #d63384;
@@ -72,7 +70,6 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            transition: transform 0.1s ease;
             -webkit-tap-highlight-color: transparent;
         }
         #yesBtn {
@@ -84,25 +81,53 @@
             color: white;
             z-index: 10;
         }
-        /* Floating Envelope Component */
+        /* Pop-up Envelope Styles */
+        .envelope-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .arrow-down {
+            font-size: 40px;
+            color: #d63384;
+            animation: bounceArrow 1s infinite;
+            margin-bottom: 5px;
+        }
+        .instruction-tag {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d63384;
+            margin-bottom: 15px;
+        }
         .envelope-widget {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
             cursor: pointer;
-            z-index: 100;
             background: white;
-            padding: 12px;
+            padding: 20px;
             border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.2);
-            font-size: 30px;
-            animation: bounce 2s infinite;
+            box-shadow: 0 10px 25px rgba(214, 51, 132, 0.3);
+            font-size: 60px;
+            transition: transform 0.2s;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .envelope-widget:active {
+            transform: scale(0.9);
         }
-        /* Letter Modal Overlay */
+        /* Kiss Stage Container */
+        .kiss-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popUp 0.5s ease-out;
+        }
+        #kissBtn {
+            background-color: #ff4757;
+            color: white;
+            font-size: 24px;
+            padding: 15px 40px;
+            width: auto;
+            margin-top: 15px;
+        }
+        /* Modal Overlay */
         .modal {
             display: none;
             position: fixed;
@@ -126,31 +151,29 @@
         .close-btn {
             background: #6c757d;
             color: white;
-            padding: 8px 20px;
-            font-size: 14px;
+            padding: 10px 30px;
+            font-size: 16px;
             border-radius: 20px;
             margin-top: 20px;
             width: auto;
         }
         .hidden { display: none !important; }
-        .success-message {
-            color: #d63384;
-            font-size: 24px;
-            font-weight: bold;
-            line-height: 1.4;
+        @keyframes bounceArrow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         @keyframes popUp {
-            0% { transform: scale(0.7); opacity: 0; }
+            0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Main Card Box -->
+    <!-- STAGE 1: The Question Box -->
     <div class="container" id="quizContainer">
         <div class="emoji-display" id="mainEmoji">🥺</div>
-        <h1>Do you still want to be my boyfriend?</h1>
+        <h1>Will you still be willing to be my boyfriend?</h1>
         <div class="warning-text" id="warningMessage"></div>
         <div class="buttons">
             <button id="yesBtn">YES</button>
@@ -158,24 +181,33 @@
         </div>
     </div>
 
-    <!-- Success Message Box -->
-    <div class="container hidden" id="successContainer">
-        <div class="emoji-display">😎👊</div>
-        <div class="success-message">
-            Buti naman, sa tingin mo may choice ka nang gigigil ako sayo 😂❤️
+    <!-- STAGE 2: Envelope Pop Up (Hidden initially) -->
+    <div class="container hidden" id="envelopeStage">
+        <div class="envelope-container">
+            <div class="arrow-down">⬇️</div>
+            <div class="instruction-tag">"click mo na to sige na"</div>
+            <div class="envelope-widget" id="envelopeBtn">💌</div>
         </div>
     </div>
 
-    <!-- Floating Envelope -->
-    <div class="envelope-widget" id="envelopeBtn">💌</div>
+    <!-- STAGE 3: Kiss Request Box (Hidden initially) -->
+    <div class="container hidden" id="kissStage">
+        <div class="kiss-container">
+            <div class="emoji-display">😘💋</div>
+            <div class="instruction-tag" style="padding: 0 10px;">"click mo na kiss button bilisan mo para kiss na tayo"</div>
+            <button id="kissBtn">MUAH! 💋</button>
+        </div>
+    </div>
 
-    <!-- Hidden Letter Modal -->
+    <!-- Message Letter Modal Display Window -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
-            <div style="font-size: 40px; margin-bottom: 10px;">💖</div>
-            <h3 style="color: #d63384; margin: 0 0 10px 0;">To My Favorite Person</h3>
-            <p style="color: #555; line-height: 1.5; margin: 0;">Happy Monthsary! <br> I love you so much my love! 💌✨</p>
-            <button class="close-btn" id="closeModal">Close</button>
+            <div style="font-size: 50px; margin-bottom: 10px;">💖</div>
+            <h3 style="color: #d63384; margin: 0 0 10px 0;">Buti naman, sa tingin mo may choice ka? 😂❤️</h3>
+            <p style="color: #555; line-height: 1.6; font-size: 18px; margin: 0;">
+                Happy Monthsary! <br> I love you so much! 💌✨
+            </p>
+            <button class="close-btn" id="closeModal">Next 👉</button>
         </div>
     </div>
 
