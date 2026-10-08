@@ -15,7 +15,7 @@ const threats = [
     { text: "Subukan mo lang i-click 'to... 🫵", emoji: "🤬" },
     { text: "Sa tingin mo talaga may choice ka? 🤨", emoji: "🙄" },
     { text: "Isa... dalawa... palo sa ulo gusto mo 🥊", emoji: "💥" },
-    { text: "Wala kang takas esti! 🔒😂", emoji: "😈" }
+    { text: "Wala kang takas estioco! 🔒😂", emoji: "😈" }
 ];
 
 let threatIndex = 0;
