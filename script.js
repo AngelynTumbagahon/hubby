@@ -1,7 +1,7 @@
 // EDIT YOUR CUSTOM INFORMATION HERE:
 const MY_NAME = "Your Name";       // Change to your name
-const BF_NAME = "His Name";       // Change to his name
-const TIME_CELEBRATION = "Happy Monthsary!"; // Change to "Happy Anniversary!" or months if you want
+const BF_NAME = "ESTIOCO";        // Set default to Estioco
+const TIME_CELEBRATION = "Happy Monthsary!"; // Change if needed
 
 document.addEventListener("DOMContentLoaded", () => {
     const quizContainer = document.getElementById("quizContainer");
@@ -24,46 +24,52 @@ document.addEventListener("DOMContentLoaded", () => {
     // Apply custom text settings dynamically
     letterMessage.innerHTML = `${TIME_CELEBRATION} <br> I love you so much ${BF_NAME}! 💌✨`;
 
+    // UPDATED: Injected your exact custom lines here
     const warnings = [
         "Subukan mo lang i-click yan! 😡",
         "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
         "Sige, ESTIOCO, gigil mo talaga ko! 🤬",
         "Walang choice kundi YES! 😤",
-        "Ah ganyan ha? I-YES mo na kasi! 💔",
-        "Hinding-hindi mo yan mapipindot! 🤪"
+        "Ah ganyan ha? I-YES mo na NGANIIIIII! 💔",
+        "Dalian mo inaantok na ko! 🥱"
     ];
 
-    const emojiStates = ["😠", "😾", "😭", "😤", "🤬", "👊"];
+    const emojiStates = ["😠", "😾", "😭", "😤", "🤬", "🥱"];
     let warningIndex = 0;
-    
-    // Button sizing variables
-    let yesScale = 1;
-    let noScale = 1;
 
-    // --- STAGE 1: Clickable NO button logic ---
-    noBtn.addEventListener("click", () => {
+    // --- STAGE 1: Runaway NO Button Logic (Teleports away) ---
+    function moveNoButton() {
+        const padding = 20;
+        
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+        
+        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+        
+        noBtn.style.position = "fixed";
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+
         warningMessage.textContent = warnings[warningIndex];
         mainEmoji.textContent = emojiStates[warningIndex];
         mainEmoji.className = "emoji-display angry-animation";
         
         warningIndex = (warningIndex + 1) % warnings.length;
+    }
 
-        // Button Morphing Logic (Yes grows, No shrinks)
-        yesScale += 0.2;
-        noScale -= 0.12;
-
-        yesBtn.style.transform = `scale(${yesScale})`;
-        noBtn.style.transform = `scale(${noScale})`;
-
-        // Prevent the NO button from getting too small to tap
-        if (noScale < 0.4) {
-            noScale = 0.4;
-        }
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault(); 
+        moveNoButton();
     });
 
     // --- TRANSITION: Click YES -> Reveal Envelope ---
     yesBtn.addEventListener("click", () => {
         quizContainer.classList.add("hidden");
+        if (noBtn.style.position === "fixed") {
+            noBtn.style.display = "none";
+        }
         envelopeStage.classList.remove("hidden");
     });
 
@@ -107,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     kissBtn.addEventListener("click", () => {
         playKissSound();
-        kissEmoji.textContent = "🥰💋"; // Swap to happy kissing face
+        kissEmoji.textContent = "🥰💋"; 
         
         setTimeout(() => {
             alert(`Muah! 💋 I love you so much baby! ${TIME_CELEBRATION} ulit! ❤️✨`);
