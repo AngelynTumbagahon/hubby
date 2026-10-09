@@ -27,19 +27,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const emojiStates = ["😠", "😾", "😭", "😤", "🤬", "🥱"];
     let warningIndex = 0;
 
-    // --- STAGE 1: Runaway NO Button Logic (Teleports away) ---
-    function moveNoButton() {
-        const padding = 20;
+    // --- STAGE 1: Bounding-Safe Runaway Translate Logic ---
+    function moveNoButton(e) {
+        if(e) e.preventDefault();
         
-        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+        // Obtains boundary details relative strictly to the viewport viewable safe dimensions
+        const winWidth = window.innerWidth;
+        const winHeight = window.innerHeight;
         
-        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+        // Generates fluid offsets across a broad pixel matrix coordinate space
+        const randomX = (Math.random() * (winWidth * 0.7)) - (winWidth * 0.35);
+        const randomY = (Math.random() * (winHeight * 0.6)) - (winHeight * 0.3);
         
-        noBtn.style.position = "fixed";
-        noBtn.style.left = randomX + "px";
-        noBtn.style.top = randomY + "px";
+        // Moves the button safely via translate transformations without creating blocking elements
+        noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
 
         warningMessage.textContent = warnings[warningIndex];
         mainEmoji.textContent = emojiStates[warningIndex];
@@ -49,27 +50,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     noBtn.addEventListener("mouseover", moveNoButton);
-    noBtn.addEventListener("touchstart", (e) => {
-        e.preventDefault(); 
-        moveNoButton();
-    });
+    noBtn.addEventListener("touchstart", moveNoButton, {passive: false});
 
     // --- TRANSITION: Click YES -> Reveal Envelope ---
-    yesBtn.addEventListener("click", () => {
+    yesBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         quizContainer.classList.add("hidden");
-        if (noBtn.style.position === "fixed") {
-            noBtn.style.display = "none";
-        }
+        noBtn.style.display = "none"; 
         envelopeStage.classList.remove("hidden");
     });
 
     // --- STAGE 2: Envelope Open -> Reveal Modal ---
-    envelopeBtn.addEventListener("click", () => {
+    envelopeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         letterModal.style.display = "flex";
     });
 
     // --- TRANSITION: Close Modal Message -> Reveal Kiss Box ---
-    closeModal.addEventListener("click", () => {
+    closeModal.addEventListener("click", (e) => {
+        e.preventDefault();
         letterModal.style.display = "none";
         envelopeStage.classList.add("hidden");
         kissStage.classList.remove("hidden");
@@ -96,12 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
             osc.start();
             osc.stop(ctx.currentTime + 0.15);
-        } catch (e) {
+        } catch (err) {
             console.log("Audio systems initialized.");
         }
     }
 
-    kissBtn.addEventListener("click", () => {
+    kissBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         playKissSound();
         kissEmoji.textContent = "🥰💋"; 
         
