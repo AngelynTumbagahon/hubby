@@ -13,18 +13,20 @@
             min-height: 100vh;
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ffeef2;
-            background-image: radial-gradient(#ffccd5 20%, transparent 20%);
-            background-size: 20px 20px;
+            /* UPDATED COLOR PALETTE: Deep Crimson-Magenta Romantic Palette */
+            background-color: #7a0c32;
+            background-image: radial-gradient(#9c1445 20%, transparent 20%);
+            background-size: 25px 25px;
             overflow: hidden;
             text-align: center;
             padding: 16px;
             box-sizing: border-box;
         }
         .container {
-            background-color: white;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            background-color: #ffffff;
+            border: 3px solid #ff2a75;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             width: 100%;
             max-width: 360px;
             padding: 35px 24px;
@@ -33,23 +35,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 420px;
+            min-height: 440px;
             position: relative;
         }
-        .emoji-display {
-            font-size: 75px;
-            margin-bottom: 15px;
-            line-height: 1;
-            user-select: none;
-        }
-        .heart-animation {
-            animation: pulse 0.8s infinite alternate ease-in-out;
-        }
-        .shock-animation {
-            animation: shake 0.15s infinite alternate ease-in-out;
+        .gif-display {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 16px;
         }
         h1 {
-            color: #d63384;
+            color: #9c1445;
             font-size: 24px;
             margin: 0 0 20px 0;
             line-height: 1.4;
@@ -70,63 +67,56 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             -webkit-tap-highlight-color: transparent;
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #yesBtn {
-            background-color: #e91e63;
+            background-color: #ff2a75;
             color: white;
             z-index: 5;
         }
         #noBtn {
-            background-color: #6c757d;
+            background-color: #4a5568;
             color: white;
             z-index: 2;
         }
-        /* Heart Icon Widget Styles */
+        /* Pulse Heart Graphic Asset Styles */
         .heart-widget {
             cursor: pointer;
             background: white;
             padding: 20px;
             border-radius: 50%;
-            box-shadow: 0 10px 25px rgba(214, 51, 132, 0.3);
+            box-shadow: 0 10px 25px rgba(255, 42, 117, 0.4);
             font-size: 65px;
             transition: transform 0.2s;
             line-height: 1;
             margin-top: 15px;
+            animation: pulse 0.8s infinite alternate ease-in-out;
         }
         .heart-widget:active {
             transform: scale(0.9);
         }
-        /* Generic utility styles */
         .action-text {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            color: #d63384;
+            color: #ff2a75;
             margin-bottom: 10px;
         }
         .hidden { display: none !important; }
         
-        /* Keyframes */
-        @keyframes popUp {
-            0% { transform: scale(0.6); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        /* Interactive Animation Timelines */
         @keyframes pulse {
             to { transform: scale(1.15); }
-        }
-        @keyframes shake {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            100% { transform: translate(-2px, -1px) rotate(-2deg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: Pleading Sad Face Question Box -->
+    <!-- STAGE 1: Pleading Sad Bear GIF Question Box -->
     <div class="container" id="stage1">
-        <div class="emoji-display heart-animation" id="mainEmoji">🥺💔</div>
+        <!-- FIXED ACTIVE LINK: Sad crying pleading bear -->
+        <img src="https://moeyy.xyz" class="gif-display" alt="Sad bear pleading">
         <h1>Do you love me?</h1>
         <div class="buttons">
             <button id="yesBtn">YES</button>
@@ -134,23 +124,25 @@
         </div>
     </div>
 
-    <!-- STAGE 2: Ahhhh You Love Me Prompt -->
+    <!-- STAGE 2: Ahhhh You Love Me Shocked GIF Prompt -->
     <div class="container hidden" id="stage2">
-        <div class="emoji-display shock-animation">😳✨</div>
-        <h1 style="font-size: 20px; padding: 0 5px;">ahhhhhhhhhhhhhhhhhhhhh you love me??????</h1>
-        <button id="repeatBtn" style="background-color: #e91e63; color: white; width: auto; padding: 12px 35px; margin-top: 15px;">ulitin mo aba 👉</button>
+        <!-- FIXED ACTIVE LINK: Shocked excited dancing bear -->
+        <img src="https://moeyy.xyz" class="gif-display" alt="Shocked happy bear">
+        <h1 style="font-size: 20px; padding: 0 5px; color: #ff2a75;">ahhhhhhhhhhhhhhhhhhhhh you love me??????</h1>
+        <button id="repeatBtn" style="background-color: #ff2a75; color: white; width: auto; padding: 12px 35px; margin-top: 15px;">ulitin mo aba 👉</button>
     </div>
 
     <!-- STAGE 3: Click Heart Icon Stage -->
     <div class="container hidden" id="stage3">
         <div class="action-text">"click heart icon"</div>
-        <div class="heart-widget heart-animation" id="heartBtn">❤️</div>
+        <div class="heart-widget" id="heartBtn">❤️</div>
     </div>
 
-    <!-- STAGE 4: Final Love Declaration -->
+    <!-- STAGE 4: Final Love Declaration Celebration GIF -->
     <div class="container hidden" id="stage4">
-        <div class="emoji-display heart-animation">🥰🎉</div>
-        <h1 style="font-size: 18px; color: #e91e63; padding: 0 5px; word-break: break-word;">
+        <!-- FIXED ACTIVE LINK: Ultimate happy sweet couple head kisses -->
+        <img src="https://moeyy.xyz" class="gif-display" alt="Sweet bear kisses">
+        <h1 style="font-size: 18px; color: #ff2a75; padding: 0 5px; word-break: break-word;">
             ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh you love me nganiiiiiiiii
         </h1>
     </div>
