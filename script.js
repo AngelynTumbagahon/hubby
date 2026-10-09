@@ -1,20 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Hardware cabinet mapping loops
+    // HUD element node target mappings
+    const hudPanel = document.getElementById("hudPanel");
+    const hudLevel = document.getElementById("hudLevel");
+    const hudClock = document.getElementById("hudClock");
+    const hudScore = document.getElementById("hudScore");
+    
+    // Core game framework anchors
     const gameCabinet = document.getElementById("gameCabinet");
     const gameAsset = document.getElementById("gameAsset");
     const gameHeader = document.getElementById("gameHeader");
     const gameLog = document.getElementById("gameLog");
+    const seaArena = document.getElementById("seaArena");
     const gameControls = document.getElementById("gameControls");
-
-    // HUD instrumentation
-    const hpLevel = document.getElementById("hpLevel");
-    const rejectCount = document.getElementById("rejectCount");
 
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
 
-    // Dynamic gameplay dialog matrix loops
-    const logFails = [
+    // Dynamic error speech matrix parameters
+    const warnings = [
         "Subukan mo lang i-click yan! 😡",
         "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
         "Sige, ESTIOCO, gigil mo talaga ko! 🤬",
@@ -22,132 +25,234 @@ document.addEventListener("DOMContentLoaded", () => {
         "Ah ganyan ha? I-YES mo na kasi NGANIIIIII! 💔",
         "Dalian mo inaantok na ko! 🥱"
     ];
-
-    const spriteFails = ["👹", "💥", "👻", "🌶️", "💀", "💤"];
+    const emojiStates = ["😠", "😾", "😭", "😤", "🤬", "🥱"];
     
-    let clickTrack = 0;
-    let playerHealth = 100;
-    let buttonGrowthScale = 1;
-    let buttonShrinkScale = 1;
+    let warningIndex = 0;
+    let yesScale = 1;
+    let noScale = 1;
 
-    // Custom Web Audio Arcade Beep/Buzzer Generator Modules
-    function triggerBuzzerSound(isError) {
+    // Game State Engine Trackers
+    let currentQuest = 1;
+    let catchScore = 0;
+    const goalRequirement = 6;
+    let countdownClock = 15;
+    
+    let tickerInterval = null;
+    let creepInterval = null;
+    let processingInterval = null;
+    
+    let meterDirection = 1;
+    let meterPosition = 0;
+    let cowSatisfactionPercent = 0;
+
+    // Web Audio Core Arcade Synth Modules
+    function playAudioFrequency(isSpecialKiss) {
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             const ctx = new AudioContext();
             const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
+            const gainNode = ctx.createGain();
             
-            osc.type = isError ? "sawtooth" : "sine";
-            osc.frequency.setValueAtTime(isError ? 130 : 900, ctx.currentTime);
-            if (!isError) {
-                osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.16);
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(isSpecialKiss ? 850 : 490, ctx.currentTime);
+            if (isSpecialKiss) {
+                osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.16);
             }
             
-            gain.gain.setValueAtTime(0.4, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.16);
+            gainNode.gain.setValueAtTime(0.35, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.16);
             
-            osc.connect(gain);
-            gain.connect(ctx.destination);
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
             osc.start();
             osc.stop(ctx.currentTime + 0.16);
-        } catch (e) {
-            console.log("Synthesizer platform ready.");
-        }
+        } catch (e) {}
     }
 
-    // --- STAGE 1 LOGIC: Hit NO -> Deduct Health, log attempts, grow YES ---
+    function playFailureBuzzer() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(125, ctx.currentTime);
+            osc.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.18);
+        } catch(e){}
+    }
+
+    // --- STAGE 1 SELECTION PANELS: NO Button Morphing ---
     noBtn.addEventListener("click", (e) => {
         e.preventDefault();
+        playFailureBuzzer();
         
-        clickTrack++;
-        rejectCount.textContent = clickTrack;
+        gameLog.textContent = `> ${warnings[warningIndex]}`;
+        gameAsset.textContent = emojiStates[warningIndex];
+        gameAsset.className = "game-sprite shake";
 
-        // Deduct player HUD health units dynamically
-        playerHealth -= 15;
-        if (playerHealth < 10) playerHealth = 10; 
-        hpLevel.style.width = playerHealth + "%";
+        warningIndex = (warningIndex + 1) % warnings.length;
+        
+        // Morph dimensions: YES button scales massively, NO button shrinks
+        yesScale += 0.55;
+        noScale -= 0.12;
 
-        // Feed information loops dynamically into log boxes and sprites
-        gameLog.textContent = `> ${logFails[cycleIndex()]}`;
-        gameAsset.textContent = spriteFails[cycleIndex()];
-        gameAsset.className = "game-sprite glitch-shake";
-        triggerBuzzerSound(true);
+        yesBtn.style.transform = `scale(${yesScale})`;
+        noBtn.style.transform = `scale(${noScale})`;
 
-        // Radical layout matrix mutation calculations
-        buttonGrowthScale += 0.55;
-        buttonShrinkScale -= 0.12;
-
-        yesBtn.style.transform = `scale(${buttonGrowthScale})`;
-        noBtn.style.transform = `scale(${buttonShrinkScale})`;
-
-        if (buttonShrinkScale < 0.35) {
-            buttonShrinkScale = 0.35;
-            noBtn.style.transform = `scale(${buttonShrinkScale})`;
+        if (noScale < 0.35) {
+            noScale = 0.35;
+            noBtn.style.transform = `scale(${noScale})`;
         }
     });
 
-    function cycleIndex() {
-        return (clickTrack - 1) % logFails.length;
-    }
-
-    // --- TRANSITION: YES Clicked -> Advance into Shock Outburst Panel ---
     yesBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        triggerBuzzerSound(false);
-
-        // Reset HUD parameters to perfect values
-        playerHealth = 100;
-        hpLevel.style.width = "100%";
-
-        gameAsset.textContent = "🤯🚨";
-        gameAsset.className = "game-sprite glitch-shake";
-        gameHeader.textContent = "ahhhhhhhhhhhhhhhhhhhhh you love me??????";
-        gameHeader.style.fontSize = "20px";
-        gameLog.textContent = "> QUEST UPDATE: ACCIDENTAL CONFESSION UNLOCKED.";
-
-        gameControls.innerHTML = `
-            <button id="arcadeQuestBtn" style="background: linear-gradient(135deg, #00f3ff, #00a8ff); color: #000; font-weight:900;">
-                ulitin mo aba 🔄
-            </button>
-        `;
-
-        document.getElementById("arcadeQuestBtn").addEventListener("click", loadHeartQuestStage);
+        playAudioFrequency(false);
+        triggerGetCrabsPromptStage();
     });
 
-    // --- TRANSITION: Ulitin Mo Aba Clicked -> Advance into Heart Tap Challenge ---
-    function loadHeartQuestStage(e) {
-        e.preventDefault();
-        triggerBuzzerSound(false);
+    // --- LEVEL 1 PROMPT: Displays "GET ME CRABS! 🦀" ---
+    function triggerGetCrabsPromptStage() {
+        // Reset old scale morphs from buttons
+        yesBtn.style.transform = "scale(1)";
+        noBtn.style.transform = "scale(1)";
 
-        gameHeader.remove();
-        gameLog.textContent = "> MISSION: TRIGGER ULTIMATE CORE HEART ACTIVATION CODE.";
-        gameAsset.className = "game-sprite pulse-fast";
-        gameAsset.textContent = "🎮⚡";
-        gameAsset.style.fontSize = "45px";
-
-        gameControls.innerHTML = `
-            <div class="giant-pixel-heart" id="pixelHeartCore">❤️</div>
-        `;
-
-        document.getElementById("pixelHeartCore").addEventListener("click", loadVictoryDeclarationStage);
-    }
-
-    // --- TRANSITION: Heart Core Clicked -> Ultimate Cinematic Victory Outburst Stage ---
-    function loadVictoryDeclarationStage(e) {
-        e.preventDefault();
+        gameAsset.textContent = "🦀🕸️";
+        gameHeader.textContent = "GET ME CRABS!";
+        gameLog.textContent = "HULIHAN MO KO CRABS GAMIT ANG NET BILISAN MO! TAP START NOW!";
         
-        triggerBuzzerSound(false);
-        setTimeout(() => triggerBuzzerSound(false), 80);
+        gameControls.innerHTML = `
+            <button id="startQuestBtn">START CORE NET QUEST 🕹️</button>
+        `;
 
-        gameLog.remove();
-        gameAsset.className = "game-sprite pulse-fast";
-        gameAsset.textContent = "👑🏆";
+        document.getElementById("startQuestBtn").addEventListener("click", runCampaignQuestRouter);
+    }
+
+    // --- CENTRAL CAMPAIGN ROUTER ENVIRONMENT ---
+    function runCampaignQuestRouter() {
+        catchScore = 0;
+        countdownClock = 15;
+        seaArena.classList.remove("hidden");
+        seaArena.innerHTML = "";
+        gameControls.innerHTML = "";
+
+        hudPanel.classList.remove("hidden");
+        hudClock.textContent = countdownClock + "s";
+
+        if (currentQuest === 1) {
+            hudLevel.textContent = "1 / 3";
+            hudScore.textContent = "0 crabs worth";
+            gameHeader.textContent = "CRAB HUNTER STAGE";
+            gameLog.textContent = "> USE THE NET (🕸️) TO HARVEST THE MOVING SEA CRABS! 🦀";
+            startCountdownTimer();
+            initializeHighSpeedSeaWildlife("🦀");
+        } else if (currentQuest === 2) {
+            hudLevel.textContent = "2 / 3";
+            hudScore.textContent = "0 shrimp worth";
+            gameHeader.textContent = "CATCH A SHRIMP GAME";
+            gameLog.textContent = "> CHRONICLE: USE THE NET TO SNATCH ALL HIDDEN MARINE SHRIMPS! 🦐🌊";
+            startCountdownTimer();
+            initializeHighSpeedSeaWildlife("🦐");
+        } else if (currentQuest === 3) {
+            clearAllActiveIntervals();
+            hudClock.textContent = "INF";
+            seaArena.classList.add("hidden");
+            gameLog.textContent = "> PRECISION CALIBRATION: PET THE COW UNTIL SATISFACTION LEVEL REACHES 100%! 🐄👋";
+            hudScore.textContent = "SATISFACTION: 0%";
+            launchCowSatisfactionMeter();
+        }
+    }
+
+    // --- GAME COUNTDOWN TIMEOUT SYSTEM ---
+    function startCountdownTimer() {
+        if (tickerInterval) clearInterval(tickerInterval);
+        tickerInterval = setInterval(() => {
+            countdownClock--;
+            hudClock.textContent = countdownClock + "s";
+
+            if (countdownClock <= 0) {
+                clearInterval(tickerInterval);
+                triggerCampaignGameOver();
+            }
+        }, 1000);
+    }
+
+    function triggerCampaignGameOver() {
+        clearAllActiveIntervals();
+        playFailureBuzzer();
+
+        seaArena.classList.add("hidden");
+        
+        const deadNode = document.createElement("div");
+        deadNode.className = "game-sprite shake";
+        deadNode.id = "failAssetNode";
+        deadNode.textContent = "💀☠️";
+        gameCabinet.insertBefore(deadNode, gameHeader);
+
+        gameHeader.textContent = "GAME OVER!";
+        gameLog.textContent = "> INAANTOK NA KO DALIAN MO KASI ESTIOCO! Tap below to restart.";
 
         gameControls.innerHTML = `
-            <h1 style="font-size: 19px; color: var(--neon-pink); line-height: 1.5; word-break: break-word; font-weight:900; letter-spacing:0px;">
-                ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh you love me nganiiiiiiiii
-            </h1>
+            <button id="retryStageBtn">RESTART LEVEL 🔄</button>
         `;
+
+        document.getElementById("retryStageBtn").addEventListener("click", () => {
+            if(document.getElementById("failAssetNode")) document.getElementById("failAssetNode").remove();
+            seaArena.classList.remove("hidden");
+            runCampaignQuestRouter();
+        });
     }
-});
+
+    function clearAllActiveIntervals() {
+        if(tickerInterval) clearInterval(tickerInterval);
+        if(creepInterval) clearInterval(creepInterval);
+        if(processingInterval) clearInterval(processingInterval);
+    }
+
+    // --- MARINE BIOME CHALLENGE FRAMEWORK (Levels 1 & 2) ---
+    function initializeHighSpeedSeaWildlife(emoji) {
+        if (creepInterval) clearInterval(creepInterval);
+        seaArena.innerHTML = "";
+
+        // Instantiates goal collection array structures immediately inside bounds
+        for (let i = 0; i < goalRequirement + 3; i++) {
+            const item = document.createElement("div");
+            item.className = "spawn-item";
+            item.textContent = emoji;
+            
+            const maxX = seaArena.clientWidth - 45;
+            const maxY = seaArena.clientHeight - 45;
+            item.style.left = Math.floor(Math.random() * maxX) + "px";
+            item.style.top = Math.floor(Math.random() * maxY) + "px";
+
+            // Click intercept handler hooks
+            item.addEventListener("click", () => {
+                playAudioFrequency(false);
+                catchScore++;
+                
+                // Dynamically evaluate text strings based on requested flow
+                const itemLabel = (emoji === "🦀") ? "crabs" : "shrimp";
+                hudScore.textContent = `He loves me: ${catchScore} ${itemLabel} worth!`;
+                item.remove();
+
+                if (catchScore >= goalRequirement) {
+                    clearAllActiveIntervals();
+                    routeToNextMilestoneCheckpoint();
+                }
+            });
+
+            seaArena.appendChild(item);
+        }
+
+        // Active drift vector computations simulating crawling or jumping organisms
+        creepInterval = setInterval(() => {
+            const children = seaArena.getElementsByClassName("spawn-item");
+            for (let item of children) {
+                const curLeft = parseFloat(item.style.left);
+                const curTop = parseFloat(item.style.top);
+                
+                let nextLeft = curLeft + ((Math.random() * 45) - 22);
+                let nextTop = curTop + ((Math.random() * 45) - 22);
+
+                if (nextLeft < 0) nextLeft = 10;
