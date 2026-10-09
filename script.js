@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const kissEmoji = document.getElementById("kissEmoji");
 
     // Apply custom text settings dynamically
-    letterMessage.innerHTML = `${TIME_CELEBRATION} <br> I love you so much ${BF_NAME}! 💌✨`;
+    letterMessage.innerHTML = `${TIME_CELEBRATION} <br> I love you so much ${my love}! 💌✨`;
 
     // UPDATED: Injected your exact custom lines here
     const warnings = [
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         kissEmoji.textContent = "🥰💋"; 
         
         setTimeout(() => {
-            alert(`Muah! 💋 I love you so much baby! ${TIME_CELEBRATION} ulit! ❤️✨`);
+            alert(`Muah! 💋 I love you so much my love! ${TIME_CELEBRATION} ulit! ❤️✨`);
         }, 150);
     });
 });
