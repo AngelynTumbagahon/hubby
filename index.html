@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,8 +36,16 @@ html
             min-height: 400px;
         }
         .emoji-display {
-            font-size: 70px;
+            font-size: 75px;
             margin-bottom: 15px;
+            line-height: 1;
+            user-select: none;
+        }
+        .angry-animation {
+            animation: shake 0.2s infinite alternate ease-in-out;
+        }
+        .heart-animation {
+            animation: pulse 0.8s infinite alternate ease-in-out;
         }
         h1 {
             color: #d63384;
@@ -50,8 +57,11 @@ html
             color: #dc3545;
             font-size: 16px;
             font-weight: bold;
-            min-height: 24px;
-            margin-bottom: 25px;
+            min-height: 48px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .buttons {
             display: flex;
@@ -60,7 +70,6 @@ html
             gap: 15px;
             position: relative;
             width: 100%;
-            min-height: 120px;
         }
         button {
             width: 85%;
@@ -72,6 +81,10 @@ html
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s, font-size 0.2s, padding 0.2s, width 0.2s;
+        }
+        button:active {
+            transform: scale(0.98);
         }
         #yesBtn {
             background-color: #e91e63;
@@ -80,7 +93,6 @@ html
         #noBtn {
             background-color: #6c757d;
             color: white;
-            z-index: 10;
         }
         /* Pop-up Envelope Styles */
         .envelope-container {
@@ -109,6 +121,7 @@ html
             box-shadow: 0 10px 25px rgba(214, 51, 132, 0.3);
             font-size: 60px;
             transition: transform 0.2s;
+            line-height: 1;
         }
         .envelope-widget:active {
             transform: scale(0.9);
@@ -148,6 +161,9 @@ html
             width: 100%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             animation: popUp 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .close-btn {
             background: #6c757d;
@@ -159,6 +175,8 @@ html
             width: auto;
         }
         .hidden { display: none !important; }
+        
+        /* Animation Keyframes */
         @keyframes bounceArrow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -167,14 +185,21 @@ html
             0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
+        @keyframes shake {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-2px, -1px) rotate(-3deg); }
+        }
+        @keyframes pulse {
+            to { transform: scale(1.15); }
+        }
     </style>
 </head>
 <body>
 
     <!-- STAGE 1: The Question Box -->
     <div class="container" id="quizContainer">
-        <div class="emoji-display" id="mainEmoji">🥺</div>
-        <h1>Will you still be willing to be my boyfriend?</h1>
+        <div class="emoji-display heart-animation" id="mainEmoji">🥺</div>
+        <h1 id="mainQuestion">Do you still want to be my boyfriend?</h1>
         <div class="warning-text" id="warningMessage"></div>
         <div class="buttons">
             <button id="yesBtn">YES</button>
@@ -182,7 +207,7 @@ html
         </div>
     </div>
 
-    <!-- STAGE 2: Envelope Pop Up (Hidden initially) -->
+    <!-- STAGE 2: Envelope Pop Up -->
     <div class="container hidden" id="envelopeStage">
         <div class="envelope-container">
             <div class="arrow-down">⬇️</div>
@@ -191,10 +216,10 @@ html
         </div>
     </div>
 
-    <!-- STAGE 3: Kiss Request Box (Hidden initially) -->
+    <!-- STAGE 3: Kiss Request Box -->
     <div class="container hidden" id="kissStage">
         <div class="kiss-container">
-            <div class="emoji-display">😘💋</div>
+            <div class="emoji-display heart-animation" id="kissEmoji">😘</div>
             <div class="instruction-tag" style="padding: 0 10px;">"click mo na kiss button bilisan mo para kiss na tayo"</div>
             <button id="kissBtn">MUAH! 💋</button>
         </div>
@@ -203,15 +228,16 @@ html
     <!-- Message Letter Modal Display Window -->
     <div class="modal" id="letterModal">
         <div class="modal-content">
-            <div style="font-size: 50px; margin-bottom: 10px;">💖</div>
-            <h3 style="color: #d63384; margin: 0 0 10px 0;">Buti naman, sa tingin mo may choice ka? 😂❤️</h3>
-            <p style="color: #555; line-height: 1.6; font-size: 18px; margin: 0;">
+            <div class="emoji-display heart-animation" style="margin-bottom: 10px; font-size: 55px;">💖</div>
+            <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka? 😂❤️</h3>
+            <p id="letterMessage" style="color: #555; line-height: 1.6; font-size: 18px; margin: 0; text-align: center;">
                 Happy Monthsary! <br> I love you so much! 💌✨
             </p>
             <button class="close-btn" id="closeModal">Next 👉</button>
         </div>
     </div>
 
+    <!-- Connects directly to your script.js file -->
     <script src="script.js"></script>
 </body>
 </html>
