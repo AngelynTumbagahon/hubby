@@ -1,15 +1,9 @@
-// EDIT YOUR CUSTOM INFORMATION HERE:
-const MY_NAME = "Your Name";       // Change to your name
-const BF_NAME = "ESTIOCO";        // Set default to Estioco
-const TIME_CELEBRATION = "Happy Monthsary!"; // Change if needed
-
 document.addEventListener("DOMContentLoaded", () => {
     const quizContainer = document.getElementById("quizContainer");
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const mainEmoji = document.getElementById("mainEmoji");
     const warningMessage = document.getElementById("warningMessage");
-    const letterMessage = document.getElementById("letterMessage");
 
     const envelopeStage = document.getElementById("envelopeStage");
     const envelopeBtn = document.getElementById("envelopeBtn");
@@ -21,10 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const kissBtn = document.getElementById("kissBtn");
     const kissEmoji = document.getElementById("kissEmoji");
 
-    // Apply custom text settings dynamically
-    letterMessage.innerHTML = `${TIME_CELEBRATION} <br> I love you so much ${my love}! 💌✨`;
-
-    // UPDATED: Injected your exact custom lines here
     const warnings = [
         "Subukan mo lang i-click yan! 😡",
         "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
@@ -48,8 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
         
         noBtn.style.position = "fixed";
-        noBtn.style.left = `${randomX}px`;
-        noBtn.style.top = `${randomY}px`;
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
 
         warningMessage.textContent = warnings[warningIndex];
         mainEmoji.textContent = emojiStates[warningIndex];
@@ -116,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         kissEmoji.textContent = "🥰💋"; 
         
         setTimeout(() => {
-            alert(`Muah! 💋 I love you so much my love! ${TIME_CELEBRATION} ulit! ❤️✨`);
+            alert("Muah! 💋 I love you so much my love! Happy Monthsary ulit! ❤️✨");
         }, 150);
     });
 });
