@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const warnings = [
         "Subukan mo lang i-click yan! 😡",
         "Hoy! Bawal i-click yan sabi eh palo ka sa ulo! 🔪",
-        "Sige, subukan mo, gigil mo talaga ko! 🤬",
+        "Sige, ESTIOCO, gigil mo talaga ko! 🤬",
         "Walang choice kundi YES! 😤",
         "Ah ganyan ha? I-YES mo na kasi! 💔",
         "Hinding-hindi mo yan mapipindot! 🤪"
