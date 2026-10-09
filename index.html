@@ -33,7 +33,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 400px;
+            min-height: 420px;
             position: relative;
         }
         .emoji-display {
@@ -42,27 +42,17 @@
             line-height: 1;
             user-select: none;
         }
-        .angry-animation {
-            animation: shake 0.2s infinite alternate ease-in-out;
-        }
         .heart-animation {
             animation: pulse 0.8s infinite alternate ease-in-out;
         }
+        .shock-animation {
+            animation: shake 0.15s infinite alternate ease-in-out;
+        }
         h1 {
             color: #d63384;
-            font-size: 22px;
-            margin: 0 0 10px 0;
+            font-size: 24px;
+            margin: 0 0 20px 0;
             line-height: 1.4;
-        }
-        .warning-text {
-            color: #dc3545;
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 48px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         .buttons {
             display: flex;
@@ -82,166 +72,87 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             -webkit-tap-highlight-color: transparent;
-            pointer-events: auto !important; /* Forces active browser layer event handlers */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #yesBtn {
             background-color: #e91e63;
             color: white;
-            transition: transform 0.1s;
-        }
-        #yesBtn:active {
-            transform: scale(0.96);
+            z-index: 5;
         }
         #noBtn {
             background-color: #6c757d;
             color: white;
-            transition: transform 0.1s ease-out; /* Smooth fluid vector movements */
+            z-index: 2;
         }
-        /* Pop-up Envelope Styles */
-        .envelope-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .arrow-down {
-            font-size: 40px;
-            color: #d63384;
-            animation: bounceArrow 1s infinite;
-            margin-bottom: 5px;
-        }
-        .instruction-tag {
-            font-size: 18px;
-            font-weight: bold;
-            color: #d63384;
-            margin-bottom: 15px;
-        }
-        .envelope-widget {
+        /* Heart Icon Widget Styles */
+        .heart-widget {
             cursor: pointer;
             background: white;
             padding: 20px;
             border-radius: 50%;
             box-shadow: 0 10px 25px rgba(214, 51, 132, 0.3);
-            font-size: 60px;
+            font-size: 65px;
             transition: transform 0.2s;
             line-height: 1;
+            margin-top: 15px;
         }
-        .envelope-widget:active {
+        .heart-widget:active {
             transform: scale(0.9);
         }
-        /* Kiss Stage Container */
-        .kiss-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: popUp 0.5s ease-out;
-        }
-        #kissBtn {
-            background-color: #ff4757;
-            color: white;
-            font-size: 24px;
-            padding: 15px 40px;
-            width: auto;
-            margin-top: 15px;
-            transition: transform 0.1s;
-        }
-        #kissBtn:active {
-            transform: scale(0.96);
-        }
-        /* Modal Overlay */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            max-width: 320px;
-            width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            animation: popUp 0.3s ease-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .close-btn {
-            background: #6c757d;
-            color: white;
-            padding: 10px 30px;
-            font-size: 16px;
-            border-radius: 20px;
-            margin-top: 20px;
-            width: auto;
+        /* Generic utility styles */
+        .action-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d63384;
+            margin-bottom: 10px;
         }
         .hidden { display: none !important; }
         
-        /* Animation Keyframes */
-        @keyframes bounceArrow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        /* Keyframes */
         @keyframes popUp {
             0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes shake {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            100% { transform: translate(-2px, -1px) rotate(-3deg); }
-        }
         @keyframes pulse {
             to { transform: scale(1.15); }
+        }
+        @keyframes shake {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-2px, -1px) rotate(-2deg); }
         }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: The Question Box -->
-    <div class="container" id="quizContainer">
-        <div class="emoji-display heart-animation" id="mainEmoji">🥺</div>
-        <h1 id="mainQuestion">Do you still want to be my boyfriend?</h1>
-        <div class="warning-text" id="warningMessage"></div>
+    <!-- STAGE 1: Pleading Sad Face Question Box -->
+    <div class="container" id="stage1">
+        <div class="emoji-display heart-animation" id="mainEmoji">🥺💔</div>
+        <h1>Do you love me?</h1>
         <div class="buttons">
             <button id="yesBtn">YES</button>
             <button id="noBtn">NO</button>
         </div>
     </div>
 
-    <!-- STAGE 2: Envelope Pop Up -->
-    <div class="container hidden" id="envelopeStage">
-        <div class="envelope-container">
-            <div class="arrow-down">⬇️</div>
-            <div class="instruction-tag">"click mo na to sige na"</div>
-            <div class="envelope-widget" id="envelopeBtn">💌</div>
-        </div>
+    <!-- STAGE 2: Ahhhh You Love Me Prompt -->
+    <div class="container hidden" id="stage2">
+        <div class="emoji-display shock-animation">😳✨</div>
+        <h1 style="font-size: 20px; padding: 0 5px;">ahhhhhhhhhhhhhhhhhhhhh you love me??????</h1>
+        <button id="repeatBtn" style="background-color: #e91e63; color: white; width: auto; padding: 12px 35px; margin-top: 15px;">ulitin mo aba 👉</button>
     </div>
 
-    <!-- STAGE 3: Kiss Request Box -->
-    <div class="container hidden" id="kissStage">
-        <div class="kiss-container">
-            <div class="emoji-display heart-animation" id="kissEmoji">😘</div>
-            <div class="instruction-tag" style="padding: 0 10px;">"click mo na kiss button bilisan mo para kiss na tayo"</div>
-            <button id="kissBtn">MUAH! 💋</button>
-        </div>
+    <!-- STAGE 3: Click Heart Icon Stage -->
+    <div class="container hidden" id="stage3">
+        <div class="action-text">"click heart icon"</div>
+        <div class="heart-widget heart-animation" id="heartBtn">❤️</div>
     </div>
 
-    <!-- Message Letter Modal Display Window -->
-    <div class="modal" id="letterModal">
-        <div class="modal-content">
-            <div class="emoji-display heart-animation" style="margin-bottom: 10px; font-size: 55px;">💖</div>
-            <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka?h3>
-            <p id="letterMessage" style="color: #555; line-height: 1.6; font-size: 18px; margin: 0; text-align: center;">
-                Happy Monthsary! <br> I love you so much, my love! 💌✨
-            </p>
-            <button class="close-btn" id="closeModal">Next 👉</button>
-        </div>
+    <!-- STAGE 4: Final Love Declaration -->
+    <div class="container hidden" id="stage4">
+        <div class="emoji-display heart-animation">🥰🎉</div>
+        <h1 style="font-size: 18px; color: #e91e63; padding: 0 5px; word-break: break-word;">
+            ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh you love me nganiiiiiiiii
+        </h1>
     </div>
 
     <script src="script.js"></script>
