@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Answer Wisely! ❤️</title>
+    <title>🕹️ ARCADE HERO: LOVE QUEST v1.4 🕹️</title>
     <style>
+        :root {
+            --bg-dark: #0a0112;
+            --bg-grid: rgba(255, 42, 117, 0.04);
+            --neon-pink: #ff2a75;
+            --neon-cyan: #00f3ff;
+            --neon-yellow: #fff200;
+            --text-light: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 42, 117, 0.25);
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -12,139 +23,189 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* UPDATED COLOR PALETTE: Deep Crimson-Magenta Romantic Palette */
-            background-color: #7a0c32;
-            background-image: radial-gradient(#9c1445 20%, transparent 20%);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(var(--bg-grid) 2px, transparent 2px),
+                              linear-gradient(90deg, var(--bg-grid) 2px, transparent 2px);
             background-size: 25px 25px;
             overflow: hidden;
             text-align: center;
             padding: 16px;
             box-sizing: border-box;
         }
-        .container {
-            background-color: #ffffff;
-            border: 3px solid #ff2a75;
-            border-radius: 28px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+
+        /* Live Retro Status HUD Panel */
+        .hud-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             width: 100%;
-            max-width: 360px;
-            padding: 35px 24px;
+            max-width: 380px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            color: var(--text-light);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .hp-bar-outer {
+            width: 80px;
+            height: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 4px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        .hp-bar-inner {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0055, #ff5e00);
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 0 35px rgba(255, 42, 117, 0.3);
+            width: 100%;
+            max-width: 380px;
+            padding: 40px 24px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 440px;
+            min-height: 460px;
             position: relative;
+            z-index: 1;
         }
-        .gif-display {
-            width: 160px;
-            height: 160px;
-            object-fit: contain;
+
+        .game-sprite {
+            font-size: 85px;
             margin-bottom: 20px;
-            border-radius: 16px;
+            line-height: 1;
+            user-select: none;
+            filter: drop-shadow(0 0 15px var(--neon-pink));
         }
+
+        .pulse-fast { animation: softPulse 0.6s infinite alternate ease-in-out; }
+        .glitch-shake { animation: retroShake 0.1s infinite alternate; }
+
         h1 {
-            color: #9c1445;
+            color: var(--text-light);
             font-size: 24px;
-            margin: 0 0 20px 0;
+            font-weight: 900;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .log-box {
+            color: var(--neon-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            min-height: 52px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
             line-height: 1.4;
         }
-        .buttons {
+
+        .control-pad {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             position: relative;
             width: 100%;
         }
+
         button {
             width: 85%;
-            padding: 14px 0;
+            padding: 15px 0;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 900;
             border: none;
-            border-radius: 50px;
+            border-radius: 14px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 1px;
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         #yesBtn {
-            background-color: #ff2a75;
+            background: linear-gradient(135deg, var(--neon-pink), #ff5e97);
             color: white;
-            z-index: 5;
+            z-index: 10;
         }
+
         #noBtn {
-            background-color: #4a5568;
-            color: white;
+            background: #231230;
+            border: 1px solid rgba(255, 252, 0, 0.2);
+            color: #89729c;
             z-index: 2;
         }
-        /* Pulse Heart Graphic Asset Styles */
-        .heart-widget {
+
+        .giant-pixel-heart {
             cursor: pointer;
-            background: white;
-            padding: 20px;
+            background: rgba(255, 42, 117, 0.1);
+            border: 2px dashed var(--neon-pink);
+            padding: 25px;
             border-radius: 50%;
-            box-shadow: 0 10px 25px rgba(255, 42, 117, 0.4);
-            font-size: 65px;
-            transition: transform 0.2s;
+            font-size: 75px;
             line-height: 1;
             margin-top: 15px;
-            animation: pulse 0.8s infinite alternate ease-in-out;
+            box-shadow: 0 0 25px rgba(255, 42, 117, 0.4);
+            animation: softPulse 0.5s infinite alternate ease-in-out;
         }
-        .heart-widget:active {
-            transform: scale(0.9);
-        }
-        .action-text {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff2a75;
-            margin-bottom: 10px;
-        }
+
         .hidden { display: none !important; }
-        
-        /* Interactive Animation Timelines */
-        @keyframes pulse {
-            to { transform: scale(1.15); }
+
+        /* Animation Modules */
+        @keyframes retroShake {
+            0% { transform: translate(3px, 3px) rotate(1deg); filter: hue-rotate(0deg); }
+            100% { transform: translate(-3px, -3px) rotate(-1deg); filter: hue-rotate(90deg); }
+        }
+        @keyframes softPulse {
+            to { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--neon-pink)); }
         }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: Pleading Sad Bear GIF Question Box -->
-    <div class="container" id="stage1">
-        <!-- FIXED ACTIVE LINK: Sad crying pleading bear -->
-        <img src="https://moeyy.xyz" class="gif-display" alt="Sad bear pleading">
-        <h1>Do you love me?</h1>
-        <div class="buttons">
-            <button id="yesBtn">YES</button>
+    <!-- HUD DASHBOARD PORTAL -->
+    <div class="hud-display">
+        <div>HP: <div class="hp-bar-outer"><div class="hp-bar-inner" id="hpLevel"></div></div></div>
+        <div>NO ATTEMPTS: <span id="rejectCount" style="color: var(--neon-yellow);">0</span></div>
+    </div>
+
+    <!-- MAIN ENGINE CABINET -->
+    <div class="container" id="gameCabinet">
+        <div class="game-sprite pulse-fast" id="gameAsset">🥺💔</div>
+        <h1 id="gameHeader">Do you love me?</h1>
+        <div class="log-box" id="gameLog">> SYSTEM: LEVEL 1 QUEST ACTIVE...</div>
+        <div class="control-pad" id="gameControls">
+            <button id="yesBtn">YES, ALWAYS!</button>
             <button id="noBtn">NO</button>
         </div>
-    </div>
-
-    <!-- STAGE 2: Ahhhh You Love Me Shocked GIF Prompt -->
-    <div class="container hidden" id="stage2">
-        <!-- FIXED ACTIVE LINK: Shocked excited dancing bear -->
-        <img src="https://moeyy.xyz" class="gif-display" alt="Shocked happy bear">
-        <h1 style="font-size: 20px; padding: 0 5px; color: #ff2a75;">ahhhhhhhhhhhhhhhhhhhhh you love me??????</h1>
-        <button id="repeatBtn" style="background-color: #ff2a75; color: white; width: auto; padding: 12px 35px; margin-top: 15px;">ulitin mo aba 👉</button>
-    </div>
-
-    <!-- STAGE 3: Click Heart Icon Stage -->
-    <div class="container hidden" id="stage3">
-        <div class="action-text">"click heart icon"</div>
-        <div class="heart-widget" id="heartBtn">❤️</div>
-    </div>
-
-    <!-- STAGE 4: Final Love Declaration Celebration GIF -->
-    <div class="container hidden" id="stage4">
-        <!-- FIXED ACTIVE LINK: Ultimate happy sweet couple head kisses -->
-        <img src="https://moeyy.xyz" class="gif-display" alt="Sweet bear kisses">
-        <h1 style="font-size: 18px; color: #ff2a75; padding: 0 5px; word-break: break-word;">
-            ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh you love me nganiiiiiiiii
-        </h1>
     </div>
 
     <script src="script.js"></script>
