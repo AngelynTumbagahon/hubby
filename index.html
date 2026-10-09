@@ -34,6 +34,7 @@
             align-items: center;
             justify-content: center;
             min-height: 400px;
+            position: relative;
         }
         .emoji-display {
             font-size: 75px;
@@ -81,18 +82,20 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.1s, font-size 0.2s, padding 0.2s, width 0.2s;
-        }
-        button:active {
-            transform: scale(0.98);
+            pointer-events: auto !important; /* Forces active browser layer event handlers */
         }
         #yesBtn {
             background-color: #e91e63;
             color: white;
+            transition: transform 0.1s;
+        }
+        #yesBtn:active {
+            transform: scale(0.96);
         }
         #noBtn {
             background-color: #6c757d;
             color: white;
+            transition: transform 0.1s ease-out; /* Smooth fluid vector movements */
         }
         /* Pop-up Envelope Styles */
         .envelope-container {
@@ -140,6 +143,10 @@
             padding: 15px 40px;
             width: auto;
             margin-top: 15px;
+            transition: transform 0.1s;
+        }
+        #kissBtn:active {
+            transform: scale(0.96);
         }
         /* Modal Overlay */
         .modal {
@@ -229,7 +236,7 @@
     <div class="modal" id="letterModal">
         <div class="modal-content">
             <div class="emoji-display heart-animation" style="margin-bottom: 10px; font-size: 55px;">💖</div>
-            <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka? </h3>
+            <h3 style="color: #d63384; margin: 0 0 10px 0; text-align: center;">Buti naman, sa tingin mo may choice ka?h3>
             <p id="letterMessage" style="color: #555; line-height: 1.6; font-size: 18px; margin: 0; text-align: center;">
                 Happy Monthsary! <br> I love you so much, my love! 💌✨
             </p>
@@ -237,7 +244,6 @@
         </div>
     </div>
 
-    <!-- Connects to your external script file -->
     <script src="script.js"></script>
 </body>
 </html>
